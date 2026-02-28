@@ -1,0 +1,171 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+.home-content {
+    width: 100vw;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    gap: 2rem;
+    padding: 0 5%;
+   
+    /* Gradiente Cyan profundo con imagen médica de fondo */
+    background: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.356), rgba(3, 42, 94, 0.9)),
+        url("/med2.jpg"); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+
+    .hero-text {
+        flex: 1;
+        text-align: left;
+        max-width: 600px;
+        
+        .hero-title {
+            font-size: 4.5rem;
+            line-height: 1;
+            margin: 0;
+            font-weight: 800;
+        }
+
+        .bienvenida {
+            display: block;
+            font-size: 2.5rem;
+            color: #e0fbfc;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .restaurant { /* Es el nombre de la app: MedAssist AI */
+            display: block;
+            color: #00f5ff; /* Cyan brillante */
+            font-size: 5.5rem;
+            letter-spacing: -2px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 25px 0;
+            line-height: 1.6;
+            color: #caf0f8;
+            opacity: 0.9;
+        }
+    }
+
+    .home-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    /* Botón Principal estilo Médico */
+    .btn-primary {
+        background: #00f5ff !important; /* Cyan */
+        color: #03045e !important;
+        border: none !important;
+        padding: 15px 35px !important;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 245, 255, 0.3);
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 245, 255, 0.5);
+            filter: brightness(1.1);
+        }
+    }
+
+    .btn-secondary {
+        border-color: #00f5ff !important;
+        color: #00f5ff !important;
+        
+        &:hover {
+            background: rgba(0, 245, 255, 0.1) !important;
+        }
+    }
+}
+
+/* El borde que gira ahora es color Cyan/Blanco */
+.moving-borderr {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent, 
+        #00f5ff, /* Cyan */
+        transparent 30%
+    );
+    animation: rotate-border 4s linear infinite;
+}
+
+@keyframes rotate-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.hero-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    z-index: 2;
+}
+
+.glass-card-wrapper {
+    position: relative;
+    width: 320px;
+    height: 220px; /* Más compactas para estilo médico */
+    padding: 2px; 
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:hover {
+        transform: scale(1.05) translateX(-10px); 
+    }
+}
+
+.glass-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 13px;
+    overflow: hidden;
+    z-index: 1;
+
+    .card-bg-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        transition: transform 0.6s ease;
+        opacity: 0.4; /* Menos opacidad para que el texto resalte */
+    }
+
+    .card-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        padding-left: 25px; /* Texto alineado a la izquierda */
+        background: linear-gradient(90deg, rgba(0,0,0,0.6), transparent);
+
+        h3 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            align-items: center;
+            margin: 0;
+        }
+    }
+}

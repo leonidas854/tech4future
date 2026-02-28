@@ -1,26 +1,171 @@
-@import "tailwindcss";
+/* =========================
+   MedAssist AI – Globals (LIGHT ONLY)
+   Tokens + Reset + Base Layout + Generic UI
+   ========================= */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Inter", "Roboto", "Segoe UI", Arial, "Noto Sans";
+  --fs-body: 16px;
+  --fs-label: 14px;
+  --fs-h3: 20px;
+
+  --fw-body: 400;
+  --fw-label: 500;
+  --fw-h3: 600;
+
+  /* Spacing */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+
+  /* Radius */
+  --r1: 12px;
+  --r2: 16px;
+  --r3: 20px;
+  --pill: 999px;
+
+  /* Colors (LIGHT) */
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface2: #F1F5F9;
+  --text: #0F172A;
+  --muted: #64748B;
+  --placeholder: #94A3B8;
+  --border: #E2E8F0;
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --secondary: #10B981;
+  --accentAI: #06B6D4;
+
+  --success: #16A34A;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  /* Effects */
+  --ring: rgba(37, 99, 235, 0.18);
+  --shadow: 0 16px 50px rgba(2, 6, 23, 0.12);
+
+  /* Header gradient */
+  --hero-from: var(--secondary);
+  --hero-to: var(--accentAI);
+
+  /* Force LIGHT only */
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Reset / base */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-body);
+  background: var(--bg);
+  color: var(--text);
 }
+
+/* Focus */
+:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.welcome-layout {
+  width: 120%;
+  max-width: 1200px; /* O el ancho que desees */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  
+}
+/* App container: controla ancho “phone mockup” */
+.container {
+  width: min(620px, 100%);
+  margin: 0 auto;
+  padding: var(--s2);
+}
+
+/* Simple typography helpers (opcional, pero útil) */
+.h3 { font-size: var(--fs-h3); font-weight: var(--fw-h3); margin: 0; }
+.label { font-size: var(--fs-label); font-weight: var(--fw-label); color: var(--muted); }
+.muted { color: var(--muted); }
+
+/* Generic components (reutilizables) */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+}
+
+.input, .textarea, .select {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px;
+  border-radius: var(--r2);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+.textarea { min-height: 140px; resize: vertical; }
+.input::placeholder, .textarea::placeholder { color: var(--placeholder); }
+
+.btn {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--r2);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, opacity 120ms ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.btn--primary {
+  border-color: transparent;
+  background: var(--primary);
+  color: var(--surface);
+}
+.btn--primary:hover { background: var(--primary-hover); }
+
+.btn--secondary {
+  border-color: transparent;
+  background: var(--secondary);
+  color: #052012;
+}
+
+.badge-ai {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--pill);
+  border: 1px solid color-mix(in oklab, var(--accentAI) 45%, rgba(255,255,255,0.35));
+  background: color-mix(in oklab, var(--accentAI) 18%, rgba(255,255,255,0.10));
+  font-size: 12px;
+  color: white;
+}
+
+/* App header (global porque es fijo en toda la app) */
+.app-header {
+  background: linear-gradient(150deg, var(--hero-from), var(--hero-to));
+  padding: var(--s2) 0;
+  display: fixed;
+}
+.app-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 0;
+}
+.app-header__title .h3 { color: white; }
+.app-header__title .label { color: rgba(255,255,255,0.82); }
