@@ -1,4 +1,10 @@
+
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+
 import "./globals.css";
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <main className="container">{children}</main>
+        {children}
       </body>
     </html>
   );

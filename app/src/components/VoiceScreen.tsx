@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import type { StructuredResult } from "../types/structure";
-import { structureTranscript } from "../lib/structureClient";
+import type { StructuredResult } from "../../types/structure";
+import { structureTranscript } from "../../lib/structureClient";
 
 type VoiceScreenProps = {
   transcript: string;
@@ -225,7 +225,7 @@ export default function VoiceScreen(props: VoiceScreenProps) {
               opacity: loading ? 0.6 : 1,
             }}
           >
-            Back
+            Atrás
           </button>
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -288,7 +288,7 @@ export default function VoiceScreen(props: VoiceScreenProps) {
                 opacity: loading ? 0.7 : 1,
               }}
             >
-              {loading ? "Processing..." : "Review"}
+              {loading ? "Processing..." : "Revisar"}
             </button>
           </div>
         </div>

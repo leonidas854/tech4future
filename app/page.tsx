@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import LoginScreen from "./components/LoginScreen";
-import VoiceScreen from "./components/VoiceScreen";
-import IntakeFormScreen from "./components/IntakeFormScreen";
+import LoginScreen from "./src/components/LoginScreen";
+import VoiceScreen from "./src/components/VoiceScreen";
+import IntakeFormScreen from "./src/components/IntakeFormScreen";
+import BienvenidaSection from "./src/components/Bienvenida";
 import type { StructuredResult } from "./types/structure";
 
-type Step = "login" | "voice" | "form";
+type Step = "login" | "bienvenida" | "voice" | "form";
 
 export default function Page() {
   const [step, setStep] = useState<Step>("login");
@@ -24,7 +25,16 @@ export default function Page() {
         password={password}
         setEmail={setEmail}
         setPassword={setPassword}
-        onSignIn={() => setStep("voice")}
+        onSignIn={() => setStep("bienvenida")}
+      />
+    );
+  }
+
+  if (step === "bienvenida") {
+    return (
+      <BienvenidaSection 
+        onContinue={() => setStep("voice")} 
+        onLogout={() => setStep("login")}
       />
     );
   }
@@ -34,7 +44,7 @@ export default function Page() {
       <VoiceScreen
         transcript={transcript}
         setTranscript={setTranscript}
-        onBack={() => setStep("login")}
+        onBack={() => setStep("bienvenida")}
         onReview={(result) => {
           setStructured(result);
           setStep("form");

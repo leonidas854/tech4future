@@ -75,9 +75,19 @@ body {
   border-radius: 10px;
 }
 
+.welcome-layout {
+  width: 120%;
+  max-width: 1200px; /* O el ancho que desees */
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  
+}
 /* App container: controla ancho “phone mockup” */
 .container {
-  width: min(420px, 100%);
+  width: min(620px, 100%);
   margin: 0 auto;
   padding: var(--s2);
 }
@@ -148,6 +158,7 @@ body {
 .app-header {
   background: linear-gradient(150deg, var(--hero-from), var(--hero-to));
   padding: var(--s2) 0;
+  display: fixed;
 }
 .app-header__inner {
   display: flex;
