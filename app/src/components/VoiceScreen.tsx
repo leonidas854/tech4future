@@ -3,19 +3,93 @@
 import React from "react";
 import type { StructuredResult } from "../../types/structure";
 import { structureTranscript } from "../../lib/structureClient";
+import ReviewModal from "./Reviewmodal";
+
+
 
 type VoiceScreenProps = {
   transcript: string;
-  setTranscript: (v: string) => void;
+  setTranscript: React.Dispatch<React.SetStateAction<string>>;
   onBack: () => void;
   onReview: (structured: StructuredResult) => void;
 };
 
 export default function VoiceScreen(props: VoiceScreenProps) {
   const { transcript, setTranscript, onBack, onReview } = props;
-
+const [showModal, setShowModal] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [isListening, setIsListening] = React.useState(false);
+
+  const recognitionRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      console.warn("SpeechRecognition no soportado en este navegador.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "es-ES";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = (event: any) => {
+      let finalText = "";
+      let interimText = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalText += result[0].transcript;
+        } else {
+          interimText += result[0].transcript;
+        }
+      }
+
+      if (finalText) {
+        setTranscript((prev) =>
+          prev ? prev + " " + finalText.trim() : finalText.trim()
+        );
+      }
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      recognition.stop();
+    };
+  }, [setTranscript]);
+
+  function toggleMic() {
+    if (!recognitionRef.current) return;
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch {
+        // Evita error si se llama start dos veces seguidas
+      }
+    }
+  }
 
   async function handleReview() {
     if (!transcript.trim()) {
@@ -55,16 +129,13 @@ export default function VoiceScreen(props: VoiceScreenProps) {
           padding: 18,
         }}
       >
-        {/* Title */}
         <div style={{ textAlign: "center", paddingTop: 8 }}>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--text)" }}>
             Voice Recording
           </div>
         </div>
 
-        {/* Main graphic */}
         <div style={{ marginTop: 18, display: "grid", placeItems: "center" }}>
-          {/* orb */}
           <div
             style={{
               width: 180,
@@ -77,7 +148,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
               placeItems: "center",
               position: "relative",
             }}
-            aria-label="AI orb"
           >
             <div
               style={{
@@ -90,7 +160,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
               AI
             </div>
 
-            {/* side waves */}
             <div
               aria-hidden="true"
               style={{
@@ -110,7 +179,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
             </div>
           </div>
 
-          {/* bottom waveform */}
           <div
             aria-hidden="true"
             style={{
@@ -131,7 +199,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
             <WaveBars />
           </div>
 
-          {/* Listening text */}
           <div style={{ marginTop: 16, textAlign: "center" }}>
             <div style={{ fontSize: 14, color: "var(--muted)" }}>
               MedAssist AI is listening...
@@ -151,7 +218,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
           </div>
         </div>
 
-        {/* Transcript */}
         <div style={{ marginTop: 18 }}>
           <div
             style={{
@@ -202,7 +268,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
           ) : null}
         </div>
 
-        {/* Actions */}
         <div
           style={{
             marginTop: 18,
@@ -227,9 +292,9 @@ export default function VoiceScreen(props: VoiceScreenProps) {
           >
             Atrás
           </button>
+          
 
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* Stop */}
             <button
               onClick={() => setTranscript("")}
               disabled={loading}
@@ -248,9 +313,8 @@ export default function VoiceScreen(props: VoiceScreenProps) {
               Stop
             </button>
 
-            {/* Mic (demo) */}
             <button
-              onClick={() => alert("Demo: aquí va la grabación real (Web Speech o STT externo)")}
+              onClick={toggleMic}
               disabled={loading}
               aria-label="Mic"
               style={{
@@ -258,23 +322,23 @@ export default function VoiceScreen(props: VoiceScreenProps) {
                 height: 52,
                 borderRadius: 999,
                 border: "none",
-                background:
-                  "radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--accentAI) 75%, white), var(--secondary))",
+                background: isListening
+                  ? "red"
+                  : "radial-gradient(circle at 30% 30%, color-mix(in oklab, var(--accentAI) 75%, white), var(--secondary))",
                 boxShadow: "0 12px 26px rgba(16,185,129,0.22)",
                 color: "white",
                 fontSize: 20,
                 cursor: loading ? "not-allowed" : "pointer",
                 display: "grid",
                 placeItems: "center",
-                opacity: loading ? 0.7 : 1,
               }}
             >
-              🎙
+              {isListening ? "⏹" : "🎙"}
             </button>
 
-            {/* Review */}
             <button
-              onClick={handleReview}
+              onClick={() => setShowModal(true)}
+              //onClick={() => setShowModal(true)}>
               disabled={loading}
               style={{
                 minHeight: 42,
@@ -290,10 +354,19 @@ export default function VoiceScreen(props: VoiceScreenProps) {
             >
               {loading ? "Processing..." : "Revisar"}
             </button>
+
+            <ReviewModal
+  open={showModal}
+  transcript={transcript}
+  onClose={() => setShowModal(false)}
+/>
+
+
+            
+            
           </div>
         </div>
 
-        {/* iPhone home indicator hint */}
         <div
           aria-hidden="true"
           style={{
@@ -316,8 +389,6 @@ export default function VoiceScreen(props: VoiceScreenProps) {
   );
 }
 
-/* Decorative pieces */
-
 function WaveSide({ flip }: { flip?: boolean }) {
   return (
     <div
@@ -330,7 +401,7 @@ function WaveSide({ flip }: { flip?: boolean }) {
         transform: flip ? "scaleX(-1)" : undefined,
       }}
     >
-      <svg width="64" height="40" viewBox="0 0 64 40" fill="none" aria-hidden="true">
+      <svg width="64" height="40" viewBox="0 0 64 40" fill="none">
         <path
           d="M2 20 C 10 8, 18 32, 26 20 C 34 8, 42 32, 50 20 C 54 14, 58 10, 62 20"
           stroke="rgba(255,255,255,0.85)"
